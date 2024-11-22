@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tips Menghemat Air - Air Bersih Untuk Semua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/tips.css">
+</head>
+<body>
+    <header class="headerAtas">
+        <h1 id="head">Air Bersih Untuk Semua</h1>
+        <p>Mari bersama mewujudkan akses air bersih yang berkelanjutan</p>
+    </header>
+
+    <nav class="nav">
+        <a href="index.html">Beranda</a>
+        <a href="kalkulator.html">Kalkulator Air</a>
+        <a href="peta.html">Peta Akses</a>
+        <a href="tips.html">Tips Hemat Air</a>
+        <a href="forum.html">Forum</a>
+        <a href="lapor.html">Lapor Krisis</a>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Tips Menghemat Air</h1>
+            <p>Mari bersama-sama menghemat air untuk masa depan yang lebih baik</p>
+        </div>
+
+        <div class="tips-grid">
+            <div class="tip-card">
+                <div class="tip-icon">💧</div>
+                <h3 class="tip-title">Perbaiki Kebocoran</h3>
+                <p class="tip-description">Segera perbaiki keran atau pipa yang bocor. Kebocoran kecil bisa menghabiskan hingga 20 liter air per hari.</p>
+                <p class="savings">Hemat: 600 liter/bulan</p>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-icon">🚿</div>
+                <h3 class="tip-title">Mandi Hemat Air</h3>
+                <p class="tip-description">Kurangi durasi mandi menjadi 5 menit dan gunakan shower hemat air untuk menghemat penggunaan air.</p>
+                <p class="savings">Hemat: 1000 liter/bulan</p>
+            </div>
+
+            <div class="tip-card">
+                <div class="tip-icon">🚰</div>
+                <h3 class="tip-title">Matikan Keran</h3>
+                <p class="tip-description">Matikan keran saat menyikat gigi atau mencuci muka. Buka keran hanya saat diperlukan.</p>
+                <p class="savings">Hemat: 300 liter/bulan</p>
+            </div>
+        </div>
+
+        <div class="tracker">
+            <h2>Tracker Penghematan Air</h2>
+            <div class="checklist">
+                <div class="checklist-item">
+                    <input type="checkbox" id="check1">
+                    <label for="check1">Memperbaiki kebocoran</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check2">
+                    <label for="check2">Mandi maksimal 5 menit</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check3">
+                    <label for="check3">Menggunakan air bekas untuk menyiram tanaman</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check4">
+                    <label for="check4">Mencuci mobil dengan ember</label>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h3>Progress Penghematan Air Anda</h3>
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+                <p>Anda telah menghemat <span id="savedWater">0</span> liter air</p>
+            </div>
+        </div>
+
+        <div class="quiz-section">
+            <h2>Quiz Pengetahuan Air</h2>
+            <div class="quiz-question">
+                <h3>Berapa banyak air yang terbuang dari keran yang menetes selama sehari?</h3>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-correct="true">20 liter</div>
+                    <div class="quiz-option">5 liter</div>
+                    <div class="quiz-option">10 liter</div>
+                    <div class="quiz-option">15 liter</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Air Bersih Untuk Semua. Semua hak dilindungi.</p>
+        <p>Kontak Darurat: 112</p>
+    </footer>
+
+    <script>
+        // Progress Tracker
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const progressBar = document.getElementById('progressBar');
+        const savedWaterSpan = document.getElementById('savedWater');
+        let savedWater = 0;
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateProgress);
+        });
+
+        function updateProgress() {
+            const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            const progress = (checkedCount / checkboxes.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Update saved water calculation (rough estimate)
+            savedWater = checkedCount * 250; // 250 liter per activity
+            savedWaterSpan.textContent = savedWater;
+        }
+
+        // Quiz
+        const quizOptions = document.querySelectorAll('.quiz-option');
+
+        quizOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Reset all options
+                quizOptions.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+
+                // Check if answer is correct
+                if(option.dataset.correct === 'true') {
+                    option.classList.add('correct');
+                } else {
+                    option.classList.add('incorrect');
+                    // Show correct answer
+                    quizOptions.forEach(opt => {
+                        if(opt.dataset.correct === 'true') {
+                            opt.classList.add('correct');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

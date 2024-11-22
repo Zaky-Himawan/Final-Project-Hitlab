@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Penggunaan Air - Air Bersih Untuk Semua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/stylesheet.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Air Bersih Untuk Semua</h1>
+        <p>Mari bersama mewujudkan akses air bersih yang berkelanjutan</p>
+    </header>
+
+    <nav class="nav">
+        <a href="index.html">Beranda</a>
+        <a href="kalkulator.html">Kalkulator Air</a>
+        <a href="peta.html">Peta Akses</a>
+        <a href="tips.html">Tips Hemat Air</a>
+        <a href="forum.html">Forum</a>
+        <a href="lapor.html">Lapor Krisis</a>
+    </nav>
+    
+    <div class="calculator">
+        <h2>Kalkulator Penggunaan Air Harian</h2>
+        <br></br>
+        
+        <div class="input-group">
+            <label for="shower">Durasi mandi (menit/hari):</label>
+            <input type="number" id="shower" min="0" value="0">
+        </div>
+
+        <div class="input-group">
+            <label for="toilet">Jumlah penggunaan toilet (kali/hari):</label>
+            <input type="number" id="toilet" min="0" value="0">
+        </div>
+
+        <div class="input-group">
+            <label for="laundry">Jumlah cucian (kali/minggu):</label>
+            <input type="number" id="laundry" min="0" value="0">
+        </div>
+
+        <div class="input-group">
+            <label for="dishes">Durasi mencuci piring (menit/hari):</label>
+            <input type="number" id="dishes" min="0" value="0">
+        </div>
+
+        <div class="input-group">
+            <label for="cooking">Air untuk memasak (liter/hari):</label>
+            <input type="number" id="cooking" min="0" value="0">
+        </div>
+
+        <div class="input-group">
+            <label for="plants">Jumlah tanaman yang disiram:</label>
+            <input type="number" id="plants" min="0" value="0">
+        </div>
+
+        <div class="input-group">
+            <label for="other">Penggunaan air lainnya (liter/hari):</label>
+            <input type="number" id="other" min="0" value="0">
+        </div>
+
+        <button onclick="calculateWaterUsage()">Hitung Penggunaan Air</button>
+
+        <div id="result" class="result" style="display:none;"></div>
+        <div id="tips" class="tips" style="display:none;"></div>
+    </div>
+    
+    <footer>
+        <p>© 2024 Air Bersih Untuk Semua. Semua hak dilindungi.</p>
+        <p>Kontak Darurat: 112</p>
+    </footer>
+
+    <script>
+        function calculateWaterUsage() {
+            // Mengambil nilai input
+            const shower = document.getElementById('shower').value * 9; // 9L per menit
+            const toilet = document.getElementById('toilet').value * 9; // 9L per flush
+            const laundry = (document.getElementById('laundry').value * 75) / 7; // 75L per cuci, dibagi 7 untuk per hari
+            const dishes = document.getElementById('dishes').value * 12; // 12L per menit
+            const cooking = Number(document.getElementById('cooking').value);
+            const plants = document.getElementById('plants').value * 2; // 2L per tanaman
+            const other = Number(document.getElementById('other').value);
+
+            // Menghitung total
+            const total = shower + toilet + laundry + dishes + cooking + plants + other;
+
+            // Menentukan kategori
+            let category, color, tips;
+            if (total <= 100) {
+                category = "Rendah";
+                color = "low";
+                tips = [
+                    "Pertahankan kebiasaan hemat air yang sudah baik!",
+                    "Pertimbangkan untuk memasang penampung air hujan",
+                    "Bagikan tips penghematan air kepada orang lain",
+                    "Cek secara rutin kebocoran pipa untuk memastikan efisiensi tetap terjaga",
+                    "Pertimbangkan untuk menggunakan teknologi smart water meter"
+                ];
+            } else if (total <= 150) {
+                category = "Sedang";
+                color = "medium";
+                tips = [
+                    "Kurangi durasi mandi 1-2 menit",
+                    "Gunakan ember untuk mencuci kendaraan alih-alih selang air",
+                    "Tampung air bekas cucian sayur untuk menyiram tanaman",
+                    "Pastikan mesin cuci terisi penuh sebelum digunakan",
+                    "Gunakan air bekas wudhu untuk menyiram tanaman"
+                ];
+            } else if (total <= 200) {
+                category = "Tinggi";
+                color = "high";
+                tips = [
+                    "Pasang alat penghemat air pada keran dan shower",
+                    "Ganti toilet dengan model dual flush yang lebih hemat",
+                    "Perbaiki segera kebocoran sekecil apapun",
+                    "Gunakan timba untuk mandi alih-alih shower",
+                    "Cuci mobil di tempat cucian mobil yang mendaur ulang air"
+                ];
+            } else {
+                category = "Sangat Tinggi";
+                color = "very-high";
+                tips = [
+                    "Lakukan audit penggunaan air secara menyeluruh",
+                    "Ganti semua peralatan air dengan model hemat air",
+                    "Terapkan sistem daur ulang air gray water",
+                    "Kurangi frekuensi mencuci kendaraan",
+                    "Pertimbangkan untuk memasang sistem irigasi tetes untuk tanaman"
+                ];
+            }
+
+            // Menampilkan hasil
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = `result ${color}`;
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>Hasil Perhitungan:</h3>
+                <p>Total penggunaan air: ${total.toFixed(1)} liter per hari</p>
+                <p>Kategori: ${category}</p>
+            `;
+
+            // Menampilkan tips
+            const tipsDiv = document.getElementById('tips');
+            tipsDiv.style.display = 'block';
+            tipsDiv.innerHTML = `
+                <h3>Tips Penghematan Air:</h3>
+                <ul>
+                    ${tips.map(tip => `<li>${tip}</li>`).join('')}
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>

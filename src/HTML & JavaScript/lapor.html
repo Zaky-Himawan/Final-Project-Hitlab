@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lapor Krisis Air - Air Bersih Untuk Semua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/lapor.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Lapor Krisis Air</h1>
+        <p>Laporkan masalah air bersih di wilayah Anda</p>
+    </header>
+
+    <nav class="nav">
+        <a href="index.html">Beranda</a>
+        <a href="kalkulator.html">Kalkulator Air</a>
+        <a href="peta.html">Peta Akses</a>
+        <a href="tips.html">Tips Hemat Air</a>
+        <a href="forum.html">Forum</a>
+        <a href="lapor.html">Lapor Krisis</a>
+    </nav>
+
+    <div class="report-container">
+        <div class="report-status">
+            <h2>Status Laporan Terkini</h2>
+            <div class="status-list">
+                <div class="status-item">
+                    <h3>Menunggu</h3>
+                    <p>15 laporan</p>
+                </div>
+                <div class="status-item">
+                    <h3>Diproses</h3>
+                    <p>8 laporan</p>
+                </div>
+                <div class="status-item">
+                    <h3>Selesai</h3>
+                    <p>23 laporan</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-form">
+            <h2>Form Pelaporan</h2>
+            <form id="crisisForm" onsubmit="submitReport(event)">
+                <div class="form-group">
+                    <label>Jenis Krisis</label>
+                    <select required>
+                        <option value="">Pilih jenis krisis</option>
+                        <option value="kekeringan">Kekeringan</option>
+                        <option value="pencemaran">Pencemaran Air</option>
+                        <option value="distribusi">Masalah Distribusi</option>
+                        <option value="infrastruktur">Kerusakan Infrastruktur</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tingkat Keparahan</label>
+                    <div class="severity-options">
+                        <div class="severity-option" onclick="selectSeverity(this, 'rendah')">
+                            Rendah
+                        </div>
+                        <div class="severity-option" onclick="selectSeverity(this, 'sedang')">
+                            Sedang
+                        </div>
+                        <div class="severity-option" onclick="selectSeverity(this, 'tinggi')">
+                            Tinggi
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Lokasi</label>
+                    <input type="text" required placeholder="Masukkan alamat lengkap">
+                </div>
+
+                <div class="form-group">
+                    <label>Deskripsi Masalah</label>
+                    <textarea rows="4" required placeholder="Jelaskan detail permasalahan yang terjadi"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Bukti Foto/Video</label>
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                        <p>Klik atau seret file ke sini</p>
+                        <input type="file" id="fileInput" style="display: none" accept="image/*,video/*" multiple>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Informasi Kontak</label>
+                    <input type="text" required placeholder="Nama lengkap">
+                    <input type="tel" required placeholder="Nomor telepon" style="margin-top: 0.5rem">
+                </div>
+
+                <button type="submit" class="button">Kirim Laporan</button>
+            </form>
+        </div>
+
+        <div class="emergency-contact">
+            <h3>Nomor Darurat</h3>
+            <p>Untuk situasi darurat, hubungi:</p>
+            <div class="emergency-number">112</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Air Bersih Untuk Semua. Semua hak dilindungi.</p>
+        <p>Kontak Darurat: 112</p>
+    </footer>
+
+    <script>
+        function selectSeverity(element, level) {
+            // Hapus semua seleksi yang ada
+            document.querySelectorAll('.severity-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            // Tambah seleksi pada opsi yang dipilih
+            element.classList.add('selected');
+        }
+
+        function submitReport(event) {
+            event.preventDefault();
+            // Implementasi pengiriman laporan
+            alert('Terima kasih atas laporan Anda. Tim kami akan segera menindaklanjuti.');
+            // Reset form
+            event.target.reset();
+            document.querySelectorAll('.severity-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+        }
+
+        // Implementasi drag and drop untuk upload file
+        const uploadArea = document.querySelector('.upload-area');
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#008CBA';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#ddd';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#ddd';
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            // Implementasi penanganan file
+            const fileList = Array.from(files).map(file => file.name);
+            alert(`File yang dipilih: ${fileList.join(', ')}`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Akses Air Bersih - Air Bersih Untuk Semua</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/peta.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Air Bersih Untuk Semua</h1>
+        <p>Mari bersama mewujudkan akses air bersih yang berkelanjutan</p>
+    </header>
+
+    <nav class="nav">
+        <a href="index.html">Beranda</a>
+        <a href="kalkulator.html">Kalkulator Air</a>
+        <a href="peta.html">Peta Akses</a>
+        <a href="tips.html">Tips Hemat Air</a>
+        <a href="forum.html">Forum</a>
+        <a href="lapor.html">Lapor Krisis</a>
+    </nav>
+
+    <button class="toggle-sidebar" id="toggleSidebar">☰</button>
+    <div class="map-container">
+        <div class="sidebar" id="sidebar">
+
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Cari lokasi atau daerah...">
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-title">Filter Status Air</div>
+                <div class="filter-option">
+                    <input type="checkbox" id="critical" checked>
+                    <label for="critical">Krisis</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="warning" checked>
+                    <label for="warning">Perlu Perhatian</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="good" checked>
+                    <label for="good">Baik</label>
+                </div>
+            </div>
+
+            <ul class="location-list" id="locationList"></ul>
+
+            <a href="lapor.html">
+                <button class="add-report" id="addReport">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
+                    Laporkan Kondisi Air
+                </button>
+            </a>
+        </div>
+        <div id="map" class="map"></div>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">
+        Memuat data...
+    </div>
+
+    <footer>
+        <p>© 2024 Air Bersih Untuk Semua. Semua hak dilindungi.</p>
+        <p>Kontak Darurat: 112</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Inisialisasi peta dengan style kustom
+        const map = L.map('map', {
+            zoomControl: false
+        }).setView([-6.200000, 106.816666], 6);
+
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(map);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Data contoh lokasi yang diperluas
+        const locations = [
+            {
+                name: "Desa Sukamaju",
+                lat: -6.2,
+                lng: 106.816666,
+                status: "critical",
+                description: "Kekeringan parah, sumber air terbatas",
+                population: 5000,
+                lastUpdate: "2024-03-15",
+                waterQuality: "Buruk",
+                waterSource: "Sumur"
+            },
+            {
+                name: "Kelurahan Harapan",
+                lat: -6.3,
+                lng: 106.9,
+                status: "warning",
+                description: "Kualitas air menurun",
+                population: 7500,
+                lastUpdate: "2024-03-20",
+                waterQuality: "Sedang",
+                waterSource: "PDAM"
+            },
+            {
+                name: "Kota Sejahtera",
+                lat: -6.1,
+                lng: 106.7,
+                status: "good",
+                description: "Akses air bersih tersedia",
+                population: 10000,
+                lastUpdate: "2024-03-22",
+                waterQuality: "Baik",
+                waterSource: "PDAM"
+            }
+        ];
+
+        // Fungsi untuk membuat marker kustom
+        function createCustomMarker(status) {
+            const markerHtml = `<div class="custom-marker marker-${status}"></div>`;
+            const icon = L.divIcon({
+                html: markerHtml,
+                className: 'custom-marker-container',
+                iconSize: [25, 25]
+            });
+            return icon;
+        }
+
+        // Fungsi untuk menambahkan marker ke peta
+        function addMarkers() {
+            locations.forEach(loc => {
+                const marker = L.marker([loc.lat, loc.lng], {
+                    icon: createCustomMarker(loc.status)
+                })
+                    .bindPopup(`
+                        <div class="popup-content">
+                            <h3>${loc.name}</h3>
+                            <p>${loc.description}</p>
+                            <p>Populasi: ${loc.population.toLocaleString()} jiwa</p>
+                            <p>Status: ${getStatusText(loc.status)}</p>
+                            <p>Kualitas Air: ${loc.waterQuality}</p>
+                            <p>Sumber Air: ${loc.waterSource}</p>
+                            <p>Terakhir Diperbarui: ${formatDate(loc.lastUpdate)}</p>
+                        </div>
+                    `, {
+                        maxWidth: 300
+                    })
+                    .addTo(map);
+
+                addToLocationList(loc);
+            });
+        }
+
+        // Fungsi untuk format tanggal
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        // Fungsi untuk menambahkan lokasi ke daftar
+        function addToLocationList(loc) {
+            const list = document.getElementById('locationList');
+            const item = document.createElement('li');
+            item.className = 'location-item';
+            item.innerHTML = `
+                <h3>${loc.name}</h3>
+                <p>${loc.description}</p>
+                <p>Terakhir diperbarui: ${formatDate(loc.lastUpdate)}</p>
+                <span class="status status-${loc.status}">${getStatusText(loc.status)}</span>
+            `;
+            item.onclick = () => {
+                map.setView([loc.lat, loc.lng], 13);
+                document.querySelector('.sidebar').classList.add('hidden');
+            };
+            list.appendChild(item);
+        }
+
+        // Fungsi untuk mendapatkan teks status
+        function getStatusText(status) {
+            switch(status) {
+                case 'critical': return 'Krisis';
+                case 'warning': return 'Perlu Perhatian';
+                case 'good': return 'Baik';
+                default: return status;
+            }
+        }
+
+        // Toggle sidebar di mobile
+        document.getElementById('toggleSidebar').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('hidden');
+        });
+
+        // Event listener untuk pencarian
+        document.querySelector('.search-input').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.location-item');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+
+        // Filter markers berdasarkan status
+        document.querySelectorAll('.filter-option input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const status = this.id;
+                const items = document.querySelectorAll(`.location-item`);
+                
+                items.forEach(item => {
+                    if (item.querySelector(`.status-${status}`)) {
+                        item.style.display = this.checked ? 'block' : 'none';
+                    }
+                });
+            });
+        });
+
+        // Geolokasi pengguna dengan loading indicator
+        if ("geolocation" in navigator) {
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const { latitude, longitude } = position.coords;
+                    map.setView([latitude, longitude], 13);
+                    L.marker([latitude, longitude])
+                        .bindPopup('Lokasi Anda')
+                        .addTo(map);
+                    loading.style.display = 'none';
+                },
+                error => {
+                    console.error('Error getting location:', error);
+                    loading.style.display = 'none';
+                }
+            );
+        }
+
+        // Inisialisasi peta
+        addMarkers();
+    </script>
+</body>
+</html>
